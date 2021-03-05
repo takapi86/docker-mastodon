@@ -1,0 +1,119 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app
+  labels:
+    role: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      role: app
+  template:
+    metadata:
+      labels:
+        role: app
+    spec:
+      containers:
+      - name: app
+        image: docker_app:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 3000
+        env:
+        - name: RAILS_ENV
+          value: development
+        - name: BUNDLE_PATH
+          value: "/usr/local/bundle"
+        - name: LOCAL_DOMAIN
+          value: "localhost:3000"
+        - name: SINGLE_USER_MODE
+          value: "true"
+        - name: DB_HOST
+          value: db
+        - name: DB_PORT
+          value: "5432"
+        - name: DB_NAME
+          value: postgres
+        - name: DB_USER
+          value: postgres
+        - name: DB_PASS
+          value: postgres
+        - name: REDIS_HOST
+          value: redis
+        - name: REDIS_PORT
+          value: "6379"
+        - name: REDIS_PASSWORD
+          value: ""
+        - name: SMTP_SERVER
+          value: localhost
+        - name: SMTP_PORT
+          value: "25"
+        - name: SMTP_AUTH_METHOD
+          value: none
+        - name: SMTP_OPENSSL_VERIFY_MODE
+          value: none
+        - name: SMTP_FROM_ADDRESS
+          value: 'Mastodon <notifications@localhost>'
+        - name: LANG
+          value: ja_JP.UTF-8
+        - name: TZ
+          value: Asia/Tokyo
+        - name: STDOUT_SYNC
+          value: "true"
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db
+  labels:
+    role: db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      role: db
+  template:
+    metadata:
+      labels:
+        role: db
+    spec:
+      containers:
+      - name: db
+        image: postgres:9.6-alpine
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_DB
+          value: postgres
+        - name: POSTGRES_USER
+          value: postgres
+        - name: POSTGRES_PASSWORD
+          value: postgres
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  labels:
+    role: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      role: redis
+  template:
+    metadata:
+      labels:
+        role: redis
+    spec:
+      containers:
+      - name: redis
+        image: redis:6.0-alpine
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 6379

@@ -1,0 +1,42 @@
+version: '3'
+services:
+  app:
+    build:
+      context: ./
+      dockerfile: ./web/Dockerfile
+    ports:
+      - '3000:3000'
+    environment:
+      RAILS_ENV: development
+      BUNDLE_PATH: /usr/local/bundle
+      LOCAL_DOMAIN: "localhost:3000"
+      SINGLE_USER_MODE: "true"
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: postgres
+      DB_USER: postgres
+      DB_PASS: postgres
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD:
+      SMTP_SERVER: localhost
+      SMTP_PORT: 25
+      SMTP_AUTH_METHOD: none
+      SMTP_OPENSSL_VERIFY_MODE: none
+      SMTP_FROM_ADDRESS: 'Mastodon <notifications@localhost>'
+      LANG: ja_JP.UTF-8
+      TZ: Asia/Tokyo
+      STDOUT_SYNC: "true"
+  db:
+    image: postgres:9.6-alpine
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  redis:
+    image: redis:6.0-alpine
+volumes:
+  bundle:
+  postgres_data:
