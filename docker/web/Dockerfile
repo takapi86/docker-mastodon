@@ -26,9 +26,7 @@ RUN apt update \
                       libyaml-dev \
                       pkg-config \
                       protobuf-compiler \
-                      zlib1g-dev \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+                      zlib1g-dev
 
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash - \
     && apt install -y nodejs
